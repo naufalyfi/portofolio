@@ -1410,37 +1410,48 @@
 </footer>
 
 <!-- LIGHTBOX -->
-<div class="lightbox" id="lightbox" onclick="closeLightbox()">
-  <div class="lightbox-close" onclick="closeLightbox()">✕ Close</div>
-  <img id="lightbox-img" src="" alt="" style="display:none;"/>
-  <video id="lightbox-vid" controls style="display:none;max-width:90vw;max-height:85vh;border-radius:4px;" onclick="event.stopPropagation()"></video>
-</div>
-
 <!-- HIDDEN FILE INPUTS -->
 <input type="file" class="file-input-hidden" id="file-input-profile"   accept="image/*"         onchange="handleProfileUpload(event)"/>
-<input type="file" class="file-input-hidden" id="file-input-cover"     accept="image/*"         onchange="handleCoverUpload(event)"/>
+<input type="file" class="file-input-hidden" id="file-input-cover"     accept="image/*,video/*" onchange="handleCoverUpload(event)"/>
 <input type="file" class="file-input-hidden" id="file-input-media"     accept="image/*,video/*" onchange="handleMediaUpload(event)"/>
-<input type="file" class="file-input-hidden" id="file-input-dyn-cover" accept="image/*"         onchange="handleDynCoverUpload(event)"/>
+<input type="file" class="file-input-hidden" id="file-input-dyn-cover" accept="image/*,video/*" onchange="handleDynCoverUpload(event)"/>
 <input type="file" class="file-input-hidden" id="file-input-dyn-media" accept="image/*,video/*" onchange="handleDynMediaUpload(event)"/>
 
+<!-- MODAL LOGIN OWNER -->
+<div id="login-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:300;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:40px;max-width:360px;width:100%;position:relative;">
+    <button onclick="closeLoginModal()" style="position:absolute;top:14px;right:18px;background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;">✕</button>
+    <div style="font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;">🔐 Mode Edit</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:20px;">Masukkan password untuk mengaktifkan mode edit portofolio.</p>
+    <input id="login-pw-input" type="password" placeholder="Password..." onkeydown="if(event.key==='Enter')doLogin()"
+      style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:10px 14px;color:var(--text);font-family:var(--body);font-size:14px;outline:none;margin-bottom:10px;"/>
+    <div id="login-err" style="font-size:12px;color:#ff6b6b;min-height:18px;margin-bottom:10px;font-family:var(--mono);"></div>
+    <button onclick="doLogin()"
+      style="width:100%;background:var(--accent);color:var(--bg);font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;font-weight:700;padding:13px;border:none;border-radius:3px;cursor:pointer;">
+      Masuk
+    </button>
+  </div>
+</div>
+
 <!-- MODAL TAMBAH PROYEK -->
-<div id="add-project-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:200;align-items:center;justify-content:center;padding:20px;">
+<div id="add-project-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:200;align-items:center;justify-content:center;padding:20px;">
   <div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:36px;max-width:540px;width:100%;max-height:90vh;overflow-y:auto;position:relative;">
     <div style="font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:20px;">+ Tambah Proyek Baru</div>
     <button onclick="closeAddProjectModal()" style="position:absolute;top:16px;right:20px;background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;">✕</button>
-
     <div style="display:flex;flex-direction:column;gap:16px;">
       <div>
         <label style="font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:6px;">Judul Proyek *</label>
-        <input id="np-title" type="text" placeholder="Contoh: Robot Line Follower" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:10px 14px;color:var(--text);font-family:var(--body);font-size:14px;outline:none;" />
+        <input id="np-title" type="text" placeholder="Contoh: Robot Line Follower"
+          style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:10px 14px;color:var(--text);font-family:var(--body);font-size:14px;outline:none;"/>
       </div>
       <div>
         <label style="font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:6px;">Deskripsi</label>
-        <textarea id="np-desc" rows="3" placeholder="Jelaskan proyek secara singkat..." style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:10px 14px;color:var(--text);font-family:var(--body);font-size:14px;outline:none;resize:vertical;"></textarea>
+        <textarea id="np-desc" rows="3" placeholder="Jelaskan proyek secara singkat..."
+          style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:10px 14px;color:var(--text);font-family:var(--body);font-size:14px;outline:none;resize:vertical;"></textarea>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
         <div>
-          <label style="font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:6px;">Kategori Tag 1</label>
+          <label style="font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:6px;">Tag 1</label>
           <select id="np-tag1" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:10px 14px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;">
             <option value="competition">Competition</option>
             <option value="iot">IoT</option>
@@ -1450,7 +1461,7 @@
           </select>
         </div>
         <div>
-          <label style="font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:6px;">Kategori Tag 2</label>
+          <label style="font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:6px;">Tag 2</label>
           <select id="np-tag2" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:10px 14px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;">
             <option value="robotics">Robotics</option>
             <option value="monitoring">Monitoring</option>
@@ -1462,9 +1473,11 @@
       </div>
       <div>
         <label style="font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:6px;">Poin Highlight (pisahkan dengan enter)</label>
-        <textarea id="np-bullets" rows="3" placeholder="Implementasi PID control&#10;Desain PCB custom&#10;Uji coba lapangan" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:10px 14px;color:var(--text);font-family:var(--body);font-size:14px;outline:none;resize:vertical;"></textarea>
+        <textarea id="np-bullets" rows="3" placeholder="Implementasi PID control&#10;Desain PCB custom&#10;Uji coba lapangan"
+          style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:10px 14px;color:var(--text);font-family:var(--body);font-size:14px;outline:none;resize:vertical;"></textarea>
       </div>
-      <button onclick="createNewProject()" style="background:var(--accent);color:var(--bg);font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;font-weight:700;padding:14px;border:none;border-radius:3px;cursor:pointer;transition:all 0.2s;">
+      <button onclick="createNewProject()"
+        style="background:var(--accent);color:var(--bg);font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;font-weight:700;padding:14px;border:none;border-radius:3px;cursor:pointer;">
         ✓ Buat Proyek
       </button>
     </div>
@@ -1472,228 +1485,301 @@
 </div>
 
 <style>
-  .thumb-label { font-size:16px; }
+  /* ── UPLOAD OVERLAY: hanya tampil di edit mode ── */
+  .upload-btn-overlay    { display:none !important; }
+  .edit-only             { display:none !important; }
+  body.edit-mode .upload-btn-overlay { display:flex !important; }
+  body.edit-mode .edit-only          { display:block !important; }
+  body.edit-mode .project-image-zone { cursor:pointer; }
+  body:not(.edit-mode) .project-image-zone { cursor:default; pointer-events:none; }
+  body:not(.edit-mode) .gallery-thumb      { cursor:default; pointer-events:none; }
+  body.edit-mode .gallery-thumb            { cursor:pointer; }
+  body:not(.edit-mode) .hero-photo-ring    { cursor:default; pointer-events:none; }
+  body.edit-mode .hero-photo-ring          { cursor:pointer; }
 
-  /* Tombol tambah proyek */
+  /* ── EDIT MODE BADGE ── */
+  #edit-badge {
+    display:none;
+    position:fixed;
+    top:72px;right:16px;
+    background:var(--accent);
+    color:var(--bg);
+    font-family:var(--mono);
+    font-size:10px;
+    letter-spacing:.15em;
+    text-transform:uppercase;
+    padding:6px 14px;
+    border-radius:2px;
+    z-index:150;
+    font-weight:700;
+    cursor:pointer;
+    box-shadow:0 4px 16px rgba(0,229,160,0.3);
+  }
+  body.edit-mode #edit-badge { display:block; }
+
+  /* ── TOMBOL LOGIN OWNER (pojok kanan nav) ── */
+  #owner-login-btn {
+    position:fixed;
+    bottom:24px;right:24px;
+    background:var(--surface);
+    border:1px solid var(--border);
+    color:var(--muted);
+    font-family:var(--mono);
+    font-size:10px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    padding:8px 16px;
+    border-radius:2px;
+    cursor:pointer;
+    z-index:100;
+    transition:all 0.2s;
+  }
+  #owner-login-btn:hover { border-color:var(--accent); color:var(--accent); }
+  body.edit-mode #owner-login-btn { display:none; }
+
+  /* ── TOMBOL TAMBAH PROYEK ── */
   .add-project-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    width: 100%;
-    padding: 20px;
-    border: 2px dashed var(--border);
-    border-radius: 4px;
-    background: transparent;
-    color: var(--muted);
-    font-family: var(--mono);
-    font-size: 12px;
-    letter-spacing: .15em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-top: 8px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    width:100%;
+    padding:20px;
+    border:2px dashed var(--border);
+    border-radius:4px;
+    background:transparent;
+    color:var(--muted);
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:.15em;
+    text-transform:uppercase;
+    cursor:pointer;
+    transition:all 0.2s;
+    margin-top:8px;
   }
-  .add-project-btn:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: rgba(0,229,160,0.04);
+  .add-project-btn:hover { border-color:var(--accent);color:var(--accent);background:rgba(0,229,160,0.04); }
+
+  /* ── UPLOAD PROGRESS ── */
+  #upload-progress {
+    display:none;
+    position:fixed;
+    bottom:80px;left:50%;
+    transform:translateX(-50%);
+    background:var(--card);
+    border:1px solid var(--accent);
+    color:var(--accent);
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    padding:10px 20px;
+    border-radius:3px;
+    z-index:500;
   }
 
-  /* Toast notifikasi */
+  /* ── TOAST ── */
   .toast {
-    position: fixed;
-    bottom: 32px;
-    left: 50%;
-    transform: translateX(-50%) translateY(80px);
-    background: var(--card);
-    border: 1px solid var(--accent);
-    color: var(--accent);
-    font-family: var(--mono);
-    font-size: 12px;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    padding: 12px 24px;
-    border-radius: 3px;
-    z-index: 999;
-    transition: transform 0.3s ease;
+    position:fixed;
+    bottom:32px;left:50%;
+    transform:translateX(-50%) translateY(80px);
+    background:var(--card);
+    border:1px solid var(--accent);
+    color:var(--accent);
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    padding:12px 24px;
+    border-radius:3px;
+    z-index:999;
+    transition:transform 0.3s ease;
+    white-space:nowrap;
   }
-  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast.show { transform:translateX(-50%) translateY(0); }
 
-  /* Tombol hapus proyek */
+  /* ── DELETE BTN proyek dinamis ── */
   .delete-project-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: rgba(255,60,60,0.15);
-    border: 1px solid rgba(255,60,60,0.3);
-    color: #ff6b6b;
-    border-radius: 3px;
-    padding: 4px 10px;
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    cursor: pointer;
-    z-index: 10;
-    display: none;
+    position:absolute;top:10px;right:10px;
+    background:rgba(255,60,60,0.15);
+    border:1px solid rgba(255,60,60,0.3);
+    color:#ff6b6b;
+    border-radius:3px;
+    padding:4px 10px;
+    font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+    cursor:pointer;z-index:10;
+    display:none;
   }
-  .project-card:hover .delete-project-btn { display: block; }
+  body.edit-mode .project-card:hover .delete-project-btn { display:block; }
 
-  #add-project-modal.open { display: flex !important; }
+  .thumb-label { font-size:16px; }
+  #add-project-modal.open  { display:flex !important; }
+  #login-modal.open        { display:flex !important; }
 </style>
+
+<!-- UPLOAD PROGRESS -->
+<div id="upload-progress">⏳ Mengupload ke Cloudinary...</div>
 
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
+<!-- TOMBOL LOGIN OWNER (pojok kiri bawah) -->
+<button id="owner-login-btn" onclick="openLoginModal()">🔐 Owner Login</button>
+
+<!-- EDIT MODE BADGE -->
+<div id="edit-badge" onclick="logoutEditMode()">✏ Edit Mode Aktif — Klik untuk keluar</div>
+
 <script>
-// ══════════════════════════════════════════════
-//  DATABASE IndexedDB — Data tidak hilang saat refresh
-// ══════════════════════════════════════════════
-const DB_NAME = 'naufal_portfolio_v1';
-const DB_VER  = 1;
-let db = null;
+// ══════════════════════════════════════════
+//  KONFIGURASI
+// ══════════════════════════════════════════
+const CLOUDINARY_CLOUD = 'dcsu2ffcc';
+const CLOUDINARY_PRESET = 'l34ujtkf';
+const OWNER_PASSWORD = 'naufal2025';
+const STORAGE_KEY = 'naufal_portfolio_data_v3';
 
-function openDB() {
-  return new Promise((resolve, reject) => {
-    if (db) return resolve(db);
-    const req = indexedDB.open(DB_NAME, DB_VER);
-    req.onupgradeneeded = (e) => {
-      const d = e.target.result;
-      if (!d.objectStoreNames.contains('media'))    d.createObjectStore('media');
-      if (!d.objectStoreNames.contains('projects')) d.createObjectStore('projects', { keyPath: 'id' });
-    };
-    req.onsuccess = (e) => { db = e.target.result; resolve(db); };
-    req.onerror   = (e) => reject(e.target.error);
-  });
+// ══════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════
+let isEditMode = false;
+let portfolioData = {
+  profilePhoto: null,    // Cloudinary URL
+  coverPhotos: {},       // { 'proj1': url, 'proj2': url, ... }
+  galleries: {},         // { 'gal-p1-1': url, ... }
+  dynamicProjects: []    // [ { id, title, desc, tag1, tag2, bullets, cover, gallery:[] } ]
+};
+
+// ══════════════════════════════════════════
+//  SIMPAN & MUAT DATA (localStorage — URL saja)
+// ══════════════════════════════════════════
+function saveData() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(portfolioData));
 }
 
-async function dbSave(store, key, value) {
-  const d = await openDB();
-  return new Promise((resolve, reject) => {
-    const tx = d.transaction(store, 'readwrite');
-    tx.objectStore(store).put(value, key);
-    tx.oncomplete = resolve;
-    tx.onerror    = (e) => reject(e.target.error);
-  });
+function loadData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) portfolioData = JSON.parse(raw);
+  } catch(e) { console.error('Load data error', e); }
 }
 
-async function dbGet(store, key) {
-  const d = await openDB();
-  return new Promise((resolve, reject) => {
-    const tx  = d.transaction(store, 'readonly');
-    const req = tx.objectStore(store).get(key);
-    req.onsuccess = () => resolve(req.result);
-    req.onerror   = (e) => reject(e.target.error);
-  });
+// ══════════════════════════════════════════
+//  CLOUDINARY UPLOAD
+// ══════════════════════════════════════════
+async function uploadToCloudinary(file) {
+  document.getElementById('upload-progress').style.display = 'block';
+  const fd = new FormData();
+  fd.append('file', file);
+  fd.append('upload_preset', CLOUDINARY_PRESET);
+
+  const resourceType = file.type.startsWith('video/') ? 'video' : 'image';
+  const endpoint = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/${resourceType}/upload`;
+
+  const res  = await fetch(endpoint, { method:'POST', body: fd });
+  const data = await res.json();
+  document.getElementById('upload-progress').style.display = 'none';
+  if (data.secure_url) return data.secure_url;
+  throw new Error(data.error?.message || 'Upload gagal');
 }
 
-async function dbGetAll(store) {
-  const d = await openDB();
-  return new Promise((resolve, reject) => {
-    const tx  = d.transaction(store, 'readonly');
-    const req = tx.objectStore(store).getAll();
-    req.onsuccess = () => resolve(req.result);
-    req.onerror   = (e) => reject(e.target.error);
-  });
-}
+// ══════════════════════════════════════════
+//  RENDER SEMUA DATA KE HALAMAN
+// ══════════════════════════════════════════
+function renderAll() {
+  // Foto profil
+  if (portfolioData.profilePhoto) applyProfilePhoto(portfolioData.profilePhoto);
 
-async function dbDelete(store, key) {
-  const d = await openDB();
-  return new Promise((resolve, reject) => {
-    const tx = d.transaction(store, 'readwrite');
-    tx.objectStore(store).delete(key);
-    tx.oncomplete = resolve;
-    tx.onerror    = (e) => reject(e.target.error);
-  });
-}
-
-// Simpan file sebagai ArrayBuffer ke IndexedDB
-async function saveFileToDb(key, file) {
-  const buf = await file.arrayBuffer();
-  await dbSave('media', key, { data: buf, type: file.type });
-}
-
-// Muat file dari IndexedDB → Blob URL
-async function loadFileFromDb(key) {
-  const record = await dbGet('media', key);
-  if (!record) return null;
-  const blob = new Blob([record.data], { type: record.type });
-  return URL.createObjectURL(blob);
-}
-
-// ══════════════════════════════════════════════
-//  INISIALISASI — load semua data saat halaman dibuka
-// ══════════════════════════════════════════════
-async function initPortfolio() {
-  await openDB();
-
-  // 1. Load foto profil
-  const profileUrl = await loadFileFromDb('profile-photo');
-  if (profileUrl) applyProfilePhoto(profileUrl);
-
-  // 2. Load cover foto proyek bawaan (proj1, proj2, proj3)
-  for (const pid of ['proj1', 'proj2', 'proj3']) {
-    const url = await loadFileFromDb('cover-' + pid);
-    if (url) applyCoverPhoto('img-' + pid, 'ph-' + pid + '-cover', url);
-
-    // Load gallery tiap proyek bawaan
-    for (let g = 1; g <= 4; g++) {
-      const slot = 'gal-' + pid.replace('proj','p') + '-' + g;
-      const mUrl = await loadFileFromDb('media-' + slot);
-      const mRec = await dbGet('media', 'media-' + slot);
-      if (mUrl && mRec) restoreThumb('thumb-' + slot, mUrl, mRec.type.startsWith('video/'));
-    }
+  // Cover proyek bawaan
+  for (const [key, url] of Object.entries(portfolioData.coverPhotos)) {
+    if (!url) continue;
+    const imgEl = document.getElementById('img-' + key);
+    const phEl  = document.getElementById('ph-' + key + '-cover');
+    if (imgEl) { imgEl.src = url; imgEl.style.display = 'block'; }
+    if (phEl)  phEl.style.display = 'none';
   }
 
-  // 3. Load proyek dinamis yang pernah dibuat
-  const dynProjects = await dbGetAll('projects');
-  dynProjects.sort((a,b) => a.created - b.created);
-  for (const p of dynProjects) await renderDynamicProject(p, true);
+  // Gallery bawaan
+  for (const [slot, url] of Object.entries(portfolioData.galleries)) {
+    if (!url) continue;
+    renderThumb('thumb-' + slot, url);
+  }
 
-  // 4. Scroll observer
+  // Proyek dinamis
+  for (const p of portfolioData.dynamicProjects) {
+    buildProjectCard(p);
+  }
+
   initScrollFade();
 }
 
-// ── SCROLL FADE ──
-function initScrollFade() {
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.08 });
-  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+// ══════════════════════════════════════════
+//  LOGIN / LOGOUT
+// ══════════════════════════════════════════
+function openLoginModal() {
+  document.getElementById('login-modal').classList.add('open');
+  setTimeout(() => document.getElementById('login-pw-input').focus(), 100);
+}
+function closeLoginModal() {
+  document.getElementById('login-modal').classList.remove('open');
+  document.getElementById('login-pw-input').value = '';
+  document.getElementById('login-err').textContent = '';
+}
+function doLogin() {
+  const pw = document.getElementById('login-pw-input').value;
+  if (pw === OWNER_PASSWORD) {
+    isEditMode = true;
+    document.body.classList.add('edit-mode');
+    closeLoginModal();
+    showToast('✓ Mode edit aktif');
+    // Tampilkan tombol tambah proyek
+    const btn = document.getElementById('add-project-btn-wrap');
+    if (btn) btn.style.display = 'block';
+  } else {
+    document.getElementById('login-err').textContent = '✕ Password salah';
+  }
+}
+function logoutEditMode() {
+  isEditMode = false;
+  document.body.classList.remove('edit-mode');
+  showToast('Mode edit dinonaktifkan');
+  const btn = document.getElementById('add-project-btn-wrap');
+  if (btn) btn.style.display = 'none';
 }
 
-// ══════════════════════════════════════════════
+// ══════════════════════════════════════════
 //  FOTO PROFIL
-// ══════════════════════════════════════════════
+// ══════════════════════════════════════════
 function triggerProfileUpload() {
+  if (!isEditMode) return;
   document.getElementById('file-input-profile').click();
 }
 
 async function handleProfileUpload(e) {
   const file = e.target.files[0];
   if (!file) return;
-  await saveFileToDb('profile-photo', file);
-  const url = URL.createObjectURL(file);
-  applyProfilePhoto(url);
-  showToast('✓ Foto profil tersimpan');
+  try {
+    const url = await uploadToCloudinary(file);
+    portfolioData.profilePhoto = url;
+    saveData();
+    applyProfilePhoto(url);
+    showToast('✓ Foto profil tersimpan');
+  } catch(err) { showToast('✕ Upload gagal: ' + err.message); }
   e.target.value = '';
 }
 
 function applyProfilePhoto(url) {
   const img = document.getElementById('hero-photo-img');
-  img.src = url;
-  img.style.display = 'block';
+  img.src = url; img.style.display = 'block';
   document.getElementById('hero-photo-ph').style.display = 'none';
   document.getElementById('hero-photo-sub').textContent = 'Klik untuk ganti foto';
 }
 
-// ══════════════════════════════════════════════
-//  COVER FOTO PROYEK BAWAAN
-// ══════════════════════════════════════════════
+// ══════════════════════════════════════════
+//  COVER PROYEK BAWAAN (proj1, proj2, proj3)
+// ══════════════════════════════════════════
 let currentCoverId = null;
 
 function triggerUpload(targetId) {
+  if (!isEditMode) return;
   currentCoverId = targetId;
   document.getElementById('file-input-cover').click();
 }
@@ -1701,28 +1787,27 @@ function triggerUpload(targetId) {
 async function handleCoverUpload(e) {
   const file = e.target.files[0];
   if (!file || !currentCoverId) return;
-  const dbKey = 'cover-' + currentCoverId.replace('img-', '');
-  await saveFileToDb(dbKey, file);
-  const url = URL.createObjectURL(file);
-  const prefix = currentCoverId.replace('img-', '');
-  applyCoverPhoto(currentCoverId, 'ph-' + prefix + '-cover', url);
-  showToast('✓ Cover foto tersimpan');
+  try {
+    const url    = await uploadToCloudinary(file);
+    const projKey = currentCoverId.replace('img-', '');
+    portfolioData.coverPhotos[projKey] = url;
+    saveData();
+    const imgEl = document.getElementById(currentCoverId);
+    const phEl  = document.getElementById('ph-' + projKey + '-cover');
+    if (imgEl) { imgEl.src = url; imgEl.style.display = 'block'; }
+    if (phEl)  phEl.style.display = 'none';
+    showToast('✓ Cover foto tersimpan');
+  } catch(err) { showToast('✕ Upload gagal: ' + err.message); }
   e.target.value = '';
 }
 
-function applyCoverPhoto(imgId, phId, url) {
-  const img = document.getElementById(imgId);
-  if (img) { img.src = url; img.style.display = 'block'; }
-  const ph = document.getElementById(phId);
-  if (ph) ph.style.display = 'none';
-}
-
-// ══════════════════════════════════════════════
-//  GALERI MEDIA (foto + video) — proyek bawaan
-// ══════════════════════════════════════════════
+// ══════════════════════════════════════════
+//  GALLERY MEDIA PROYEK BAWAAN
+// ══════════════════════════════════════════
 let currentMediaSlot = null;
 
 function triggerMediaUpload(slotId) {
+  if (!isEditMode) return;
   currentMediaSlot = slotId;
   document.getElementById('file-input-media').click();
 }
@@ -1730,22 +1815,30 @@ function triggerMediaUpload(slotId) {
 async function handleMediaUpload(e) {
   const file = e.target.files[0];
   if (!file || !currentMediaSlot) return;
-  const dbKey  = 'media-' + currentMediaSlot;
-  await saveFileToDb(dbKey, file);
-  const url    = URL.createObjectURL(file);
-  const isVideo = file.type.startsWith('video/');
-  restoreThumb('thumb-' + currentMediaSlot, url, isVideo);
-  showToast('✓ Media tersimpan');
+  try {
+    const url = await uploadToCloudinary(file);
+    portfolioData.galleries[currentMediaSlot] = url;
+    saveData();
+    renderThumb('thumb-' + currentMediaSlot, url);
+    showToast('✓ Media tersimpan');
+  } catch(err) { showToast('✕ Upload gagal: ' + err.message); }
   e.target.value = '';
 }
 
-function restoreThumb(thumbId, url, isVideo) {
+// ══════════════════════════════════════════
+//  RENDER THUMBNAIL
+// ══════════════════════════════════════════
+function isVideoUrl(url) {
+  return url && (url.includes('/video/') || /\.(mp4|mov|webm|avi)(\?|$)/i.test(url));
+}
+
+function renderThumb(thumbId, url) {
   const thumb = document.getElementById(thumbId);
   if (!thumb) return;
   thumb.innerHTML = '';
-  thumb.onclick   = null;
+  thumb.onclick = null;
 
-  if (isVideo) {
+  if (isVideoUrl(url)) {
     const vid = document.createElement('video');
     vid.src = url; vid.muted = true; vid.playsInline = true; vid.preload = 'metadata';
     vid.style.cssText = 'width:100%;height:100%;object-fit:cover;position:absolute;inset:0;';
@@ -1762,26 +1855,27 @@ function restoreThumb(thumbId, url, isVideo) {
     thumb.onclick = () => openImageLightbox(url);
   }
 
-  // Klik kanan = ganti media
-  const slot = thumbId.replace('thumb-', '');
+  // Klik kanan = ganti (hanya di edit mode)
+  const slotId = thumbId.replace('thumb-', '');
   thumb.addEventListener('contextmenu', (ev) => {
+    if (!isEditMode) return;
     ev.preventDefault();
-    currentMediaSlot = slot;
+    currentMediaSlot = slotId;
     document.getElementById('file-input-media').click();
   });
 }
 
-// ══════════════════════════════════════════════
-//  TAMBAH PROYEK BARU (DINAMIS)
-// ══════════════════════════════════════════════
+// ══════════════════════════════════════════
+//  PROYEK DINAMIS — TAMBAH
+// ══════════════════════════════════════════
 function openAddProjectModal()  { document.getElementById('add-project-modal').classList.add('open'); }
 function closeAddProjectModal() { document.getElementById('add-project-modal').classList.remove('open'); }
 
 const TAG_CLASS = {
-  competition: 'tag-competition', iot: 'tag-iot', embedded: 'tag-embedded',
-  ai: 'tag-competition', hardware: 'tag-embedded',
-  robotics: 'tag-embedded', monitoring: 'tag-iot', energy: 'tag-iot',
-  control: 'tag-embedded', pcb: 'tag-embedded'
+  competition:'tag-competition', iot:'tag-iot', embedded:'tag-embedded',
+  ai:'tag-competition', hardware:'tag-embedded',
+  robotics:'tag-embedded', monitoring:'tag-iot', energy:'tag-iot',
+  control:'tag-embedded', pcb:'tag-embedded'
 };
 
 async function createNewProject() {
@@ -1789,34 +1883,35 @@ async function createNewProject() {
   if (!title) { alert('Judul proyek wajib diisi!'); return; }
 
   const project = {
-    id:      'dynproj-' + Date.now(),
+    id:      'dp-' + Date.now(),
     title,
     desc:    document.getElementById('np-desc').value.trim(),
     tag1:    document.getElementById('np-tag1').value,
     tag2:    document.getElementById('np-tag2').value,
     bullets: document.getElementById('np-bullets').value.trim().split('\n').filter(Boolean),
-    created: Date.now()
+    cover:   null,
+    gallery: [null, null, null, null]
   };
 
-  await dbSave('projects', project.id, project);
-  await renderDynamicProject(project, false);
+  portfolioData.dynamicProjects.push(project);
+  saveData();
+  buildProjectCard(project);
   closeAddProjectModal();
-  showToast('✓ Proyek baru berhasil ditambahkan!');
-
-  // Reset form
+  showToast('✓ Proyek baru ditambahkan!');
   ['np-title','np-desc','np-bullets'].forEach(id => document.getElementById(id).value = '');
+  initScrollFade();
 }
 
-async function renderDynamicProject(project, isRestore) {
+function buildProjectCard(project) {
   const container = document.querySelector('#projects');
   const addBtn    = document.getElementById('add-project-btn-wrap');
 
-  const numGallery = 4;
-  const gallerySlots = Array.from({length: numGallery}, (_,i) => project.id + '-g' + (i+1));
+  const galleryHtml = [0,1,2,3].map(i => {
+    const slotId = project.id + '-g' + (i+1);
+    return `<div class="gallery-thumb" id="thumb-${slotId}" onclick="triggerDynMedia('${slotId}')"><span class="thumb-label">📷/🎬</span></div>`;
+  }).join('');
 
-  const bulletsHtml = project.bullets.map(b =>
-    `<li>${b}</li>`
-  ).join('');
+  const bulletsHtml = project.bullets.map(b => `<li>${b}</li>`).join('');
 
   const card = document.createElement('div');
   card.className = 'project-card fade-up';
@@ -1829,115 +1924,97 @@ async function renderDynamicProject(project, isRestore) {
           <div class="placeholder-icon">📁</div>
           <div>Klik untuk tambah foto cover</div>
         </div>
-        <img id="img-dyn-${project.id}" src="" alt="${project.title}" style="display:none;"/>
-        <div class="upload-btn-overlay">
-          <div class="upload-btn-inner">+ Upload Cover Foto</div>
-        </div>
+        <img id="img-dyn-${project.id}" src="" alt="${project.title}" style="display:${project.cover?'block':'none'};${project.cover?'width:100%;height:100%;object-fit:cover;':''}"/>
+        <div class="upload-btn-overlay"><div class="upload-btn-inner">+ Upload Cover</div></div>
       </div>
     </div>
     <div class="project-body">
       <div class="project-meta">
-        <span class="project-tag ${TAG_CLASS[project.tag1] || 'tag-competition'}">${project.tag1}</span>
-        <span class="project-tag ${TAG_CLASS[project.tag2] || 'tag-iot'}">${project.tag2}</span>
+        <span class="project-tag ${TAG_CLASS[project.tag1]||'tag-competition'}">${project.tag1}</span>
+        <span class="project-tag ${TAG_CLASS[project.tag2]||'tag-iot'}">${project.tag2}</span>
       </div>
       <div class="project-title">${project.title}</div>
       <p class="project-desc">${project.desc}</p>
-      ${project.bullets.length ? `<ul class="project-bullets">${bulletsHtml}</ul>` : ''}
+      ${bulletsHtml ? `<ul class="project-bullets">${bulletsHtml}</ul>` : ''}
       <div style="font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;">Dokumentasi Proyek</div>
-      <div class="project-gallery">
-        ${gallerySlots.map(slot => `
-          <div class="gallery-thumb" id="thumb-${slot}" onclick="triggerDynMedia('${slot}')">
-            <span class="thumb-label">📷/🎬</span>
-          </div>
-        `).join('')}
-      </div>
-    </div>
-  `;
+      <div class="project-gallery">${galleryHtml}</div>
+    </div>`;
 
-  // Sisipkan sebelum tombol tambah
-  if (addBtn) {
-    container.insertBefore(card, addBtn);
-  } else {
-    container.appendChild(card);
+  if (addBtn) container.insertBefore(card, addBtn);
+  else container.appendChild(card);
+
+  // Render cover & gallery kalau sudah ada URL
+  if (project.cover) {
+    const imgEl = document.getElementById('img-dyn-' + project.id);
+    const phEl  = document.getElementById('ph-' + project.id + '-cover');
+    if (imgEl) { imgEl.src = project.cover; imgEl.style.display = 'block'; imgEl.style.width='100%'; imgEl.style.height='100%'; imgEl.style.objectFit='cover'; }
+    if (phEl)  phEl.style.display = 'none';
   }
-
-  // Animasi scroll
-  setTimeout(() => initScrollFade(), 100);
-
-  // Load media jika restore
-  if (isRestore) {
-    const coverUrl = await loadFileFromDb('cover-dyn-' + project.id);
-    if (coverUrl) {
-      document.getElementById('img-dyn-' + project.id).src = coverUrl;
-      document.getElementById('img-dyn-' + project.id).style.display = 'block';
-      const ph = document.getElementById('ph-' + project.id + '-cover');
-      if (ph) ph.style.display = 'none';
-    }
-
-    for (const slot of gallerySlots) {
-      const mUrl = await loadFileFromDb('media-' + slot);
-      const mRec = await dbGet('media', 'media-' + slot);
-      if (mUrl && mRec) restoreThumb('thumb-' + slot, mUrl, mRec.type.startsWith('video/'));
-    }
+  for (let i = 0; i < 4; i++) {
+    if (project.gallery[i]) renderThumb('thumb-' + project.id + '-g' + (i+1), project.gallery[i]);
   }
 }
 
-// Cover foto untuk proyek dinamis
+// Cover foto proyek dinamis
 let dynCoverTarget = null;
-
 function triggerDynCover(projectId) {
+  if (!isEditMode) return;
   dynCoverTarget = projectId;
   document.getElementById('file-input-dyn-cover').click();
 }
-
 async function handleDynCoverUpload(e) {
   const file = e.target.files[0];
   if (!file || !dynCoverTarget) return;
-  await saveFileToDb('cover-dyn-' + dynCoverTarget, file);
-  const url = URL.createObjectURL(file);
-  const img = document.getElementById('img-dyn-' + dynCoverTarget);
-  if (img) { img.src = url; img.style.display = 'block'; }
-  const ph = document.getElementById('ph-' + dynCoverTarget + '-cover');
-  if (ph) ph.style.display = 'none';
-  showToast('✓ Cover foto tersimpan');
+  try {
+    const url = await uploadToCloudinary(file);
+    const proj = portfolioData.dynamicProjects.find(p => p.id === dynCoverTarget);
+    if (proj) { proj.cover = url; saveData(); }
+    const imgEl = document.getElementById('img-dyn-' + dynCoverTarget);
+    const phEl  = document.getElementById('ph-' + dynCoverTarget + '-cover');
+    if (imgEl) { imgEl.src = url; imgEl.style.display = 'block'; imgEl.style.width='100%'; imgEl.style.height='100%'; imgEl.style.objectFit='cover'; }
+    if (phEl)  phEl.style.display = 'none';
+    showToast('✓ Cover foto tersimpan');
+  } catch(err) { showToast('✕ Upload gagal: ' + err.message); }
   e.target.value = '';
 }
 
-// Media galeri untuk proyek dinamis
+// Gallery proyek dinamis
 let dynMediaSlot = null;
-
 function triggerDynMedia(slot) {
+  if (!isEditMode) return;
   dynMediaSlot = slot;
   document.getElementById('file-input-dyn-media').click();
 }
-
 async function handleDynMediaUpload(e) {
   const file = e.target.files[0];
   if (!file || !dynMediaSlot) return;
-  const dbKey = 'media-' + dynMediaSlot;
-  await saveFileToDb(dbKey, file);
-  const url    = URL.createObjectURL(file);
-  const isVideo = file.type.startsWith('video/');
-  restoreThumb('thumb-' + dynMediaSlot, url, isVideo);
-  showToast('✓ Media tersimpan');
+  try {
+    const url = await uploadToCloudinary(file);
+    // Simpan ke data proyek dinamis
+    const parts = dynMediaSlot.split('-g');
+    const projId = parts[0];
+    const gIdx   = parseInt(parts[1]) - 1;
+    const proj   = portfolioData.dynamicProjects.find(p => p.id === projId);
+    if (proj) { proj.gallery[gIdx] = url; saveData(); }
+    renderThumb('thumb-' + dynMediaSlot, url);
+    showToast('✓ Media tersimpan');
+  } catch(err) { showToast('✕ Upload gagal: ' + err.message); }
   e.target.value = '';
 }
 
 // Hapus proyek dinamis
-async function deleteProject(projectId) {
-  if (!confirm('Yakin ingin menghapus proyek ini? Data tidak bisa dikembalikan.')) return;
-  await dbDelete('projects', projectId);
-  // Hapus semua media terkait
-  await dbDelete('media', 'cover-dyn-' + projectId);
-  for (let i = 1; i <= 4; i++) await dbDelete('media', 'media-' + projectId + '-g' + i);
+function deleteProject(projectId) {
+  if (!confirm('Yakin ingin menghapus proyek ini?')) return;
+  portfolioData.dynamicProjects = portfolioData.dynamicProjects.filter(p => p.id !== projectId);
+  saveData();
   const card = document.getElementById('card-' + projectId);
   if (card) card.remove();
   showToast('Proyek dihapus');
 }
 
-// ══════════════════════════════════════════════
+// ══════════════════════════════════════════
 //  LIGHTBOX
-// ══════════════════════════════════════════════
+// ══════════════════════════════════════════
 function openImageLightbox(src) {
   const lb = document.getElementById('lightbox');
   const img = document.getElementById('lightbox-img');
@@ -1946,7 +2023,6 @@ function openImageLightbox(src) {
   img.src = src; img.style.display = 'block';
   lb.classList.add('open');
 }
-
 function openVideoLightbox(src) {
   const lb = document.getElementById('lightbox');
   const img = document.getElementById('lightbox-img');
@@ -1955,26 +2031,44 @@ function openVideoLightbox(src) {
   vid.src = src; vid.style.display = 'block';
   lb.classList.add('open');
 }
-
 function closeLightbox() {
-  const lb = document.getElementById('lightbox');
-  lb.classList.remove('open');
+  document.getElementById('lightbox').classList.remove('open');
   const vid = document.getElementById('lightbox-vid');
   vid.pause(); vid.src = '';
 }
-
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
 
-// ── TOAST ──
+// ══════════════════════════════════════════
+//  SCROLL FADE
+// ══════════════════════════════════════════
+function initScrollFade() {
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(en => { if (en.isIntersecting) en.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.fade-up:not(.visible)').forEach(el => obs.observe(el));
+}
+
+// ══════════════════════════════════════════
+//  TOAST
+// ══════════════════════════════════════════
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
+  setTimeout(() => t.classList.remove('show'), 2800);
 }
 
-// ── JALANKAN SAAT HALAMAN LOAD ──
-window.addEventListener('DOMContentLoaded', initPortfolio);
+// ══════════════════════════════════════════
+//  INISIALISASI
+// ══════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', () => {
+  loadData();
+  // Sembunyikan tombol tambah proyek saat bukan edit mode
+  const addBtn = document.getElementById('add-project-btn-wrap');
+  if (addBtn) addBtn.style.display = 'none';
+  renderAll();
+  initScrollFade();
+});
 </script>
 </body>
 </html>
